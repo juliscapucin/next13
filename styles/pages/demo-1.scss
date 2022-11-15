@@ -1,0 +1,13 @@
+.demo-1__title {
+  display: flex;
+  flex-direction: column;
+  font-size: 80rem;
+  text-align: center;
+
+  span {
+    align-items: center;
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+  }
+}
