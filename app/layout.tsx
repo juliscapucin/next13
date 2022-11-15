@@ -10,6 +10,14 @@ import "../styles/index.scss";
 
 import Header from "./Header";
 
+interface ScrollingType {
+  wrapper: HTMLHtmlElement | null,
+  element: HTMLHtmlElement | null,
+  trigger: HTMLHtmlElement | null,
+  onResize: () => void
+  loop: () => void
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -18,7 +26,7 @@ export default function RootLayout({
   const htmlRef = useRef<HTMLHtmlElement | null>(null);
   const elementRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  let scrolling: any;
+  let scrolling: ScrollingType
 
   function onResize() {
     scrolling.onResize();
