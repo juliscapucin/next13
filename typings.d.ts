@@ -4,3 +4,7 @@ export type Todo = {
   title: string;
   completed: boolean;
 };
+
+export type Photo = {
+  url: string;
+};

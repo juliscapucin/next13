@@ -82,7 +82,6 @@ export default class {
     });
 
     this.observer.observe(this.wrapper);
-    console.log("addObserver ran");
   }
 
   addEventListeners() {
