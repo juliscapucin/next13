@@ -103,5 +103,3 @@ export default function RootLayout({children}: {
 export function useScrollContext () {
   return useContext(LayoutContext);
 };
-
-export { LayoutContext, RootLayout };
