@@ -4,8 +4,7 @@ import React from "react";
 import { Photo } from "../../typings";
 import Link from "next/link";
 
-import {useScrollContext} from "./../layout";
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
+import {useScrollContext} from "./../../context/scrollContext"
 
 function PhotosList() {
   const photos : Photo[] = [
@@ -47,8 +46,6 @@ function PhotosList() {
   ];
 
   const {currentScroll}= useScrollContext();
-
-  console.log(currentScroll);
   
 
   return (

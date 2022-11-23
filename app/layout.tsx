@@ -1,7 +1,16 @@
 "use client";
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import Scrolling from "./../components/Scrolling";
+
+import {useScrollContext} from "./../context/scrollContext"
 
 import "../styles/index.scss";
 
@@ -9,7 +18,6 @@ import "../styles/index.scss";
 // import "../styles/globals.css";
 
 import Header from "./Header";
-
 
 //==========================//
 //========= TYPES =========//
@@ -23,25 +31,23 @@ interface ScrollingType {
   loop: () => void;
 }
 
-type ScrollContext = {
-  currentScroll: number
-}
 //==============================//
 //========= COMPONENT =========//
 //============================//
 
-const LayoutContext = createContext({} as ScrollContext);
-LayoutContext.displayName = "LayoutContext";
-
-export default function RootLayout({children}: {
+export default function RootLayout({
+  children,
+}: {
   children: React.ReactNode;
 }) {
   const htmlRef = useRef<HTMLHtmlElement | null>(null);
   const elementRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [currentScroll, setCurrentScroll] = useState(0) 
+  
+  const scrollContext= useScrollContext();
+  
 
-  let scrollHandler: ScrollingType
+  let scrollHandler: ScrollingType;
 
   function onResize() {
     scrollHandler.onResize();
@@ -51,7 +57,8 @@ export default function RootLayout({children}: {
 
   function update() {
     scrollHandler.loop();
-    setCurrentScroll(scrollHandler.current)
+
+    
 
     window.requestAnimationFrame(update);
   }
@@ -66,9 +73,6 @@ export default function RootLayout({children}: {
       trigger: window,
     });
 
-    
-    
-    
     onResize();
     update();
     window.addEventListener("resize", onResize);
@@ -77,29 +81,18 @@ export default function RootLayout({children}: {
       window.removeEventListener("resize", onResize);
     };
   }, []);
-  
-  
+
   return (
     <html ref={htmlRef}>
       <head></head>
       <body>
-        <Header />
+        <Header />        
         <div className="demo" ref={elementRef}>
-          <LayoutContext.Provider value={{ currentScroll }}>
           <div className="demo__wrapper" ref={wrapperRef}>
             {children}
           </div>
-          </LayoutContext.Provider>
         </div>
       </body>
     </html>
-  )
+  );
 }
-
-//=========================================//
-//========= CONTEXT CUSTOM HOOK  =========//
-//=======================================//
-
-export function useScrollContext () {
-  return useContext(LayoutContext);
-};
