@@ -1,8 +1,8 @@
 "use client";
 
 import React, {
-  createContext,
-  useContext,
+  cloneElement,
+  isValidElement,
   useEffect,
   useRef,
   useState,
@@ -10,7 +10,7 @@ import React, {
 
 import Scrolling from "./../components/Scrolling";
 
-import {useScrollContext} from "./../context/scrollContext"
+import { ScrollProvider } from "./../context/scrollContext";
 
 import "../styles/index.scss";
 
@@ -43,9 +43,8 @@ export default function RootLayout({
   const htmlRef = useRef<HTMLHtmlElement | null>(null);
   const elementRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  
-  const scrollContext= useScrollContext();
-  
+
+  let currentScroll = 0;
 
   let scrollHandler: ScrollingType;
 
@@ -58,7 +57,7 @@ export default function RootLayout({
   function update() {
     scrollHandler.loop();
 
-    
+    currentScroll = scrollHandler.current;
 
     window.requestAnimationFrame(update);
   }
@@ -86,12 +85,16 @@ export default function RootLayout({
     <html ref={htmlRef}>
       <head></head>
       <body>
-        <Header />        
-        <div className="demo" ref={elementRef}>
-          <div className="demo__wrapper" ref={wrapperRef}>
-            {children}
+        <Header />
+        <ScrollProvider>
+          <div className="demo" ref={elementRef}>
+            <div className="demo__wrapper" ref={wrapperRef}>
+              
+              // I'd like to pass currentScroll value to it's children
+              {children}
+            </div>
           </div>
-        </div>
+        </ScrollProvider>
       </body>
     </html>
   );
