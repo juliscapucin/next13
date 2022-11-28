@@ -1,16 +1,8 @@
 "use client";
 
-import React, {
-  cloneElement,
-  isValidElement,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import Scrolling from "./../components/Scrolling";
-
-import { ScrollProvider } from "./../context/scrollContext";
+import useScroll from "./../hooks/useScroll";
 
 import "../styles/index.scss";
 
@@ -18,6 +10,7 @@ import "../styles/index.scss";
 // import "../styles/globals.css";
 
 import Header from "./Header";
+import { lookup } from "dns";
 
 //==========================//
 //========= TYPES =========//
@@ -28,6 +21,11 @@ interface ScrollingType {
   trigger: HTMLHtmlElement | null;
   current: number;
   onResize: () => void;
+  loop: () => void;
+}
+
+interface ScrollPosition {
+  current: number;
   loop: () => void;
 }
 
@@ -43,39 +41,25 @@ export default function RootLayout({
   const htmlRef = useRef<HTMLHtmlElement | null>(null);
   const elementRef = useRef<HTMLDivElement | null>(null);
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-
-  let currentScroll = 0;
-
-  let scrollHandler: ScrollingType;
+  // const [scrollPosition, setScrollPosition] = useState<ScrollPosition | null>(null);
 
   function onResize() {
-    scrollHandler.onResize();
+    if (!wrapperRef.current || !elementRef.current)
+      console.log('this didnt run');
 
     htmlRef.current?.style.setProperty("--100vh", `${window.innerHeight}px`);
   }
 
-  function update() {
-    scrollHandler.loop();
-
-    currentScroll = scrollHandler.current;
-
-    window.requestAnimationFrame(update);
-  }
-
   useEffect(() => {
-    // if scrollHandler already exists, don't run it again
-    if (scrollHandler) return;
+    // if scroll already exists, don't run it again
+    // if (scrollPosition) return;
 
-    scrollHandler = new Scrolling({
-      element: elementRef.current,
-      wrapper: wrapperRef.current,
-      trigger: window,
-    });
+    useScroll(elementRef.current, wrapperRef.current);
 
-    onResize();
-    update();
     window.addEventListener("resize", onResize);
 
+    console.log('useeffect');
+    
     return () => {
       window.removeEventListener("resize", onResize);
     };
@@ -86,11 +70,11 @@ export default function RootLayout({
       <head></head>
       <body>
         <Header />
-          <div className="demo" ref={elementRef}>
-            <div className="demo__wrapper" ref={wrapperRef}>  
-              {children}
-            </div>
+        <div className="demo" ref={elementRef}>
+          <div className="demo__wrapper" ref={wrapperRef}>
+            {children}
           </div>
+        </div>
       </body>
     </html>
   );

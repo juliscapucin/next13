@@ -117,6 +117,9 @@ a {
 body {
   background: $color-white;
   color: $color-black;
+  font-family: Arial, Helvetica, sans-serif;
+  // font-size: calc(100vw / 1440px * 10px);
+  font-size: 10px;
   line-height: 1;
 }
 
@@ -131,8 +134,6 @@ button {
 }
 
 html {
-  font-family: $font-neue-montreal;
-  font-size: calc(100vw / 1440px * 10px);
   height: var(--100vh);
   overflow: hidden;
   left: 0;
@@ -155,4 +156,9 @@ input {
 ol,
 ul {
   list-style: none;
+}
+
+a,
+p {
+  font-size: 2rem;
 }

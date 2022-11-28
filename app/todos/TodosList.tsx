@@ -14,7 +14,6 @@ async function TodosList() {
   
   return (
     <>
-      <h1>Hello</h1>
       {todos.map((item) => 
         <p key={item.id}>
           {item.title}

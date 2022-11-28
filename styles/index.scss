@@ -3,7 +3,9 @@
 @import "./utils/functions";
 
 @import "./base/reset";
+@import "./base/layout";
 
+@import "./components/header";
 @import "./components/canvas";
 
 @import "./pages/photos";

@@ -1,11 +1,7 @@
-import type { AppProps } from 'next/app'
-import { ScrollProvider } from '../context/scrollContext'
+import type { AppProps } from "next/app";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return 
-  <ScrollProvider>
-    <Component {...pageProps} />
-  </ScrollProvider>
+  return <Component {...pageProps} />;
 }
 
-export default MyApp
+export default MyApp;

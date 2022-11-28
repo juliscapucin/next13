@@ -1,8 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Photo } from "../../typings";
-import Link from "next/link";
+import { map } from "./../../utils/math";
+import { getBoundingClientRect as getPosition } from "./../../utils/dom";
+
+interface HightlightInterface {
+  top: number | undefined;
+  left: number | undefined;
+  right: number | undefined;
+  bottom: number | undefined;
+  width: number | undefined;
+  height: number | undefined;
+}
 
 function PhotosList() {
   const photos: Photo[] = [
@@ -43,13 +53,95 @@ function PhotosList() {
     },
   ];
 
+  const outerContainerRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const innerContainerRef = useRef<HTMLDivElement | null>(null);
+
+  const [scrollPosition, setScrollPosition] = useState<number | undefined>(0);
+  const [highlight, setHighlight] = useState<HightlightInterface | null>(null);
+
+  useEffect(() => {
+    // resize();
+    const topCoord = outerContainerRef.current?.getBoundingClientRect()
+        .top
+    const rightCoord = outerContainerRef.current?.getBoundingClientRect()
+        .right
+    const bottomCoord = outerContainerRef.current?.getBoundingClientRect()
+        .bottom
+    const leftCoord = outerContainerRef.current?.getBoundingClientRect()
+        .left
+    const widthCoord = outerContainerRef.current?.getBoundingClientRect()
+        .width
+    const heightCoord = outerContainerRef.current?.getBoundingClientRect()
+        .height
+    setHighlight({top: topCoord, right: rightCoord, bottom: bottomCoord, left: leftCoord, width: widthCoord, height: heightCoord});
+    console.log(highlight);
+    update();
+  }, []);
+
+  function update() {
+    setScrollPosition(
+      outerContainerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
+        .top
+    );
+    window.requestAnimationFrame(update);
+
+    if (!highlight) return;
+
+    //Horizontal panel animations settings
+    const highlightX = map(
+      scrollPosition,
+      highlight.top,
+      highlight.bottom - highlight.height,
+      0,
+      -50
+    );
+    const highlightY = map(
+      scrollPosition,
+      highlight.top,
+      highlight.bottom,
+      0,
+      highlight.height
+    );
+
+    //apply animation to Horizontal panel styles
+    if (innerContainerRef.current && containerRef.current) {
+      containerRef.current.style.transform = `translateY(${highlightY}px)`;
+      innerContainerRef.current.style.transform = `translateX(${highlightX}%)`;
+    }
+
+    window.requestAnimationFrame(update);
+  }
+
+  // const resize = () => {
+  //   const topCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .top
+  //   const rightCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .right
+  //   const bottomCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .bottom
+  //   const leftCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .left
+  //   const widthCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .width
+  //   const heightCoord = outerContainerRef.current?.getBoundingClientRect()
+  //       .height
+  //   setHighlight({top: topCoord, right: rightCoord, bottom: bottomCoord, left: leftCoord, width: widthCoord, height: heightCoord});
+  //   console.log(highlight);
+    
+  // };
+
   return (
-    <div className="photo-list__container">
-      {photos.map((item) => (
-        <figure className="photo-list__img-container" key={item.url}>
-          <img src={item.url} className="photo-list__img" />
-        </figure>
-      ))}
+    <div className="photo-list__outer-container" ref={outerContainerRef}>
+      <div className="photo-list__box" ref={containerRef}>
+        <div className="photo-list__inner-container" ref={innerContainerRef}>
+          {photos.map((item, index) => (
+            <figure className="photo-list__img-container" key={index}>
+              <img src={item.url} className="photo-list__img" />
+            </figure>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

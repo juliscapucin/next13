@@ -1,5 +1,10 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from "react";
-
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 //==========================//
 //========= TYPES =========//
@@ -7,7 +12,8 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 
 interface ScrollContext {
   currentScroll: number;
-  updateScroll: (newScrollPosition:number)=>void
+  setCurrentScroll: React.Dispatch<React.SetStateAction<number>>;
+  updateScroll: (newScrollPosition: number) => void;
 }
 
 //==============================//
@@ -16,35 +22,32 @@ interface ScrollContext {
 
 const ScrollContext = createContext({} as ScrollContext);
 
-const ScrollProvider=({ children }: {children: React.ReactNode;})=> {
+const ScrollProvider = ({ children }: { children: React.ReactNode }) => {
+  const [currentScroll, setCurrentScroll] = useState(0);
 
-  const [currentScroll, setCurrentScroll] = useState(0) 
+  const updateScroll = (newScrollPosition: number) => {
+    setCurrentScroll(newScrollPosition);
+  };
 
-  
-const updateScroll = (newScrollPosition:number)=>{
-  setCurrentScroll(newScrollPosition)
-}
-
-  
-  
   return (
     <ScrollContext.Provider
       value={{
         currentScroll,
+        setCurrentScroll,
         updateScroll
       }}
     >
       {children}
     </ScrollContext.Provider>
   );
-}
+};
 
 //=========================================//
 //========= CONTEXT CUSTOM HOOK  =========//
 //=======================================//
 
-export function useScrollContext () {
+export function useScrollContext() {
   return useContext(ScrollContext);
-};
+}
 
 export { ScrollContext, ScrollProvider };

@@ -1,13 +1,21 @@
-.photo-list__container {
-  min-height: 900vh;
-  position: relative;
+.photo-list__outer-container {
+  overflow: hidden;
 }
 
+.photo-list__box {
+  width: fit-content;
+}
+
+// .photo-list__inner-container {
+//   display: flex;
+// }
+
 .photo-list__img-container {
-  position: absolute;
-  width: 100vw;
+  position: relative;
+  min-width: 100vw;
   height: 100vh;
   overflow: hidden;
+  // top: 0;
 }
 
 .photo-list__img {
