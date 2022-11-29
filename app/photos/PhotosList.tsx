@@ -2,10 +2,10 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Photo } from "../../typings";
-import { map } from "./../../utils/math";
+import { mapPosition } from "./../../utils/math";
 import { getBoundingClientRect as getPosition } from "./../../utils/dom";
 
-interface HightlightInterface {
+interface HighlightInterface {
   top: number | undefined;
   left: number | undefined;
   right: number | undefined;
@@ -58,51 +58,60 @@ function PhotosList() {
   const innerContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [scrollPosition, setScrollPosition] = useState<number | undefined>(0);
-  const [highlight, setHighlight] = useState<HightlightInterface | null>(null);
+  const [highlight, setHighlight] = useState<HighlightInterface | null>(null);
 
   useEffect(() => {
+    const container = outerContainerRef.current?.getBoundingClientRect();
     // resize();
-    const topCoord = outerContainerRef.current?.getBoundingClientRect()
-        .top
-    const rightCoord = outerContainerRef.current?.getBoundingClientRect()
-        .right
-    const bottomCoord = outerContainerRef.current?.getBoundingClientRect()
-        .bottom
-    const leftCoord = outerContainerRef.current?.getBoundingClientRect()
-        .left
-    const widthCoord = outerContainerRef.current?.getBoundingClientRect()
-        .width
-    const heightCoord = outerContainerRef.current?.getBoundingClientRect()
-        .height
-    setHighlight({top: topCoord, right: rightCoord, bottom: bottomCoord, left: leftCoord, width: widthCoord, height: heightCoord});
-    console.log(highlight);
-    update();
+
+    setHighlight({
+      top: container?.top,
+      right: container?.right,
+      bottom: container?.bottom,
+      left: container?.left,
+      width: container?.width,
+      height: container?.height,
+    });
   }, []);
 
+  useEffect(() => {
+    update();
+  }, [highlight]);
+
   function update() {
-    setScrollPosition(
+    const scrollPos =
       outerContainerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
-        .top
-    );
-    window.requestAnimationFrame(update);
+        .top;
 
     if (!highlight) return;
+    // console.log(highlight.top);
+    // console.log(highlight.right);
+    // console.log(highlight.bottom);
+    // console.log(highlight.left);
+    // console.log(highlight.width);
+    // console.log(highlight.height);
+    console.log(scrollPos);
+    // console.log(highlight.bottom! - highlight.height!);
+
 
     //Horizontal panel animations settings
-    const highlightX = map(
-      scrollPosition,
+    const highlightX = mapPosition(
+      scrollPos,
       highlight.top,
-      highlight.bottom - highlight.height,
+      highlight.bottom! - highlight.height!,
       0,
       -50
     );
-    const highlightY = map(
-      scrollPosition,
+    const highlightY = mapPosition(
+      scrollPos,
       highlight.top,
       highlight.bottom,
       0,
       highlight.height
     );
+
+    // console.log(highlightY);
+    // console.log(highlightX);
 
     //apply animation to Horizontal panel styles
     if (innerContainerRef.current && containerRef.current) {
@@ -113,27 +122,9 @@ function PhotosList() {
     window.requestAnimationFrame(update);
   }
 
-  // const resize = () => {
-  //   const topCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .top
-  //   const rightCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .right
-  //   const bottomCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .bottom
-  //   const leftCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .left
-  //   const widthCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .width
-  //   const heightCoord = outerContainerRef.current?.getBoundingClientRect()
-  //       .height
-  //   setHighlight({top: topCoord, right: rightCoord, bottom: bottomCoord, left: leftCoord, width: widthCoord, height: heightCoord});
-  //   console.log(highlight);
-    
-  // };
-
   return (
     <div className="photo-list__outer-container" ref={outerContainerRef}>
-      <div className="photo-list__box" ref={containerRef}>
+      <div className="photo-list__container" ref={containerRef}>
         <div className="photo-list__inner-container" ref={innerContainerRef}>
           {photos.map((item, index) => (
             <figure className="photo-list__img-container" key={index}>

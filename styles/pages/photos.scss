@@ -1,14 +1,15 @@
 .photo-list__outer-container {
   overflow: hidden;
+  min-height: 900vh;
 }
 
-.photo-list__box {
+.photo-list__container {
   width: fit-content;
 }
 
-// .photo-list__inner-container {
-//   display: flex;
-// }
+.photo-list__inner-container {
+  display: flex;
+}
 
 .photo-list__img-container {
   position: relative;
