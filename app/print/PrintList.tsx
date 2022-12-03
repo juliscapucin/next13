@@ -1,13 +1,19 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Photo, HighlightInterface } from "../../typings";
-import { mapPosition } from "./../../utils/math";
-import useUpdateHorizontal from "./../../hooks/useUpdateHorizontal"
+import { Photo } from "../../typings";
+import { mapPosition } from "../../utils/math";
 
+interface HighlightInterface {
+  top: number | undefined;
+  left: number | undefined;
+  right: number | undefined;
+  bottom: number | undefined;
+  width: number | undefined;
+  height: number | undefined;
+}
 
-
-function PhotosList() {
+function PrintList() {
   const photos: Photo[] = [
     {
       url: "https://images.unsplash.com/photo-1550251634-abd788e6bc41?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80",
@@ -64,55 +70,70 @@ function PhotosList() {
       width: container?.width,
       height: container?.height,
     });
+    
   }, []);
 
   useEffect(() => {
-    useUpdateHorizontal(outerContainerRef.current, containerRef.current, innerContainerRef.current, highlight);
+    update();
 
+    return () => {
+      window.requestAnimationFrame(update);
+    };
   }, [highlight]);
 
-  
+  function update() {
+    const scrollPos =
+      outerContainerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
+        .top;
+
+        console.log(scrollPos);
+
+    if (!highlight) return;
+
+    if(!scrollPos) return
+
+    //Horizontal panel animations settings
+    const highlightX = mapPosition(
+      -scrollPos,
+      highlight.top,
+      highlight.bottom! - window.innerHeight,
+      0,
+      -100
+    );
+    const highlightY = mapPosition(
+      -scrollPos,
+      highlight.top,
+      highlight.bottom,
+      0,
+      highlight.height
+    );
+
+    //apply animation to Horizontal panel styles
+    if (innerContainerRef.current && containerRef.current) {
+      containerRef.current.style.transform = `translateY(${highlightY}px)`;
+      innerContainerRef.current.style.transform = `translateX(${highlightX}%)`;
+    }
+
+    window.requestAnimationFrame(update);
+  }
 
   return (
-    <>
-      <section className="demo-2__seasons">
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="1.5">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-1.webp"/>
+  <>
+    <div className="rectangle">Hi there</div>
+    <div className="photo-list__outer-container" ref={outerContainerRef}>
+      <div className="photo-list__container" ref={containerRef}>
+        <div className="photo-list__inner-container" ref={innerContainerRef}>
+          {photos.map((item, index) => (
+            <figure className="photo-list__img-container" key={index}>
+              <img src={item.url} className="photo-list__img" />
             </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="-0.5">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-2.webp"/>
-            </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="1">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-3.webp"/>
-            </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="-2">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-4.webp"/>
-            </figure>
-        </div>
-      </section>
-
-      <div className="rectangle">Hi there</div>
-      <div className="photo-list__outer-container" ref={outerContainerRef}>
-        <div className="photo-list__container" ref={containerRef}>
-          <div className="photo-list__inner-container" ref={innerContainerRef}>
-            {photos.map((item, index) => (
-              <figure className="photo-list__img-container" key={index}>
-                <img src={item.url} className="photo-list__img" />
-              </figure>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
-      <div className="rectangle">Hi here</div>
+    </div>
+    <div className="rectangle">Hi here</div>
     </>
   );
 }
 
-export default PhotosList;
+export default PrintList;

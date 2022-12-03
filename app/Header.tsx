@@ -7,6 +7,7 @@ export default function Header() {
       <Link href={"/"}>Home</Link>
       <Link href={"/todos"}>Todos</Link>
       <Link href={"/photos"}>Photos</Link>
+      <Link href={"/print"}>Print</Link>
     </header>
   );
 }
