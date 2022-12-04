@@ -86,7 +86,7 @@ function PrintList() {
       outerContainerRef.current?.parentElement?.parentElement?.getBoundingClientRect()
         .top;
 
-        console.log(scrollPos);
+        
 
     if (!highlight) return;
 

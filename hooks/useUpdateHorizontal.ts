@@ -1,8 +1,11 @@
+import Translate from "./../components/Translate";
+
 import { mapPosition } from "./../utils/math";
 
 import { HighlightInterface } from "./../typings";
 
 export default function useUpdateHorizontal(
+  mainContainerRef: HTMLElement | null,
   outerContainerRef: HTMLElement | null,
   containerRef: HTMLElement | null,
   innerContainerRef: HTMLElement | null,
@@ -10,14 +13,32 @@ export default function useUpdateHorizontal(
 ) {
   function update() {
     const scrollPos =
-      outerContainerRef?.parentElement?.parentElement?.getBoundingClientRect()
+      mainContainerRef?.parentElement?.parentElement?.getBoundingClientRect()
         .top;
-
-    console.log(scrollPos);
 
     if (!highlight) return;
 
     if (!scrollPos) return;
+
+    //Parallax animations
+
+    const parallaxItems = mainContainerRef?.querySelectorAll(
+      '[data-animation="translate"]'
+    );
+
+    //animate all data-animation elements – make an array of it to be able to map
+    if (!parallaxItems) return;
+
+    const translates = Array.from(parallaxItems).map((element) => {
+      return new Translate({
+        element,
+      });
+    });
+
+    //add animation to parallax images
+    translates.forEach((translate) => {
+      translate.update(scrollPos);
+    });
 
     //Horizontal panel animations settings
     const highlightX = mapPosition(

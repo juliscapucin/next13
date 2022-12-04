@@ -1,6 +1,6 @@
 // =========== Parallax images ============
 
-.demo-2__seasons {
+.parallax__section {
   height: 86rem;
   position: relative;
   width: 100vw;
@@ -18,17 +18,16 @@
   }
 }
 
-.demo-2__seasons__media {
+.parallax__image-container {
   border-radius: 1rem;
   overflow: hidden;
   position: absolute;
 
   &:nth-child(1) {
-    border-radius: 1rem 0 0 1rem;
     height: 28.2rem;
-    right: 0;
+    right: 5rem;
     top: 18rem;
-    width: 41rem;
+    width: 35rem;
   }
 
   &:nth-child(2) {
@@ -54,13 +53,13 @@
   }
 }
 
-.demo-2__seasons__media__box {
+.parallax__image-inner-container {
   @extend %cover;
 
   border-radius: 1rem;
 }
 
-.demo-2__seasons__media__image {
+.parallax__image {
   @extend %cover;
 
   object-fit: cover;

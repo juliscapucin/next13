@@ -2,10 +2,8 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Photo, HighlightInterface } from "../../typings";
-import { mapPosition } from "./../../utils/math";
-import useUpdateHorizontal from "./../../hooks/useUpdateHorizontal"
-
-
+import useUpdateHorizontal from "./../../hooks/useUpdateHorizontal";
+import Parallax from "./Parallax";
 
 function PhotosList() {
   const photos: Photo[] = [
@@ -45,6 +43,7 @@ function PhotosList() {
       url: "https://images.unsplash.com/photo-1610030006409-dc8a0100e4a3?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2832&q=80",
     },
   ];
+  const mainContainerRef = useRef<HTMLDivElement | null>(null);
 
   const outerContainerRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -64,42 +63,25 @@ function PhotosList() {
       width: container?.width,
       height: container?.height,
     });
-  }, []);
+  }, [outerContainerRef]);
 
   useEffect(() => {
-    useUpdateHorizontal(outerContainerRef.current, containerRef.current, innerContainerRef.current, highlight);
-
+    useUpdateHorizontal(
+      mainContainerRef.current,
+      outerContainerRef.current,
+      containerRef.current,
+      innerContainerRef.current,
+      highlight
+    );
   }, [highlight]);
 
-  
-
   return (
-    <>
-      <section className="demo-2__seasons">
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="1.5">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-1.webp"/>
-            </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="-0.5">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-2.webp"/>
-            </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="1">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-3.webp"/>
-            </figure>
-        </div>
-        <div className="demo-2__seasons__media" data-animation="translate" data-animation-speed="-2">
-            <figure className="demo-2__seasons__media__box">
-                <img className="demo-2__seasons__media__image" src="https://garoaskincare.com/home/seasons-4.webp"/>
-            </figure>
-        </div>
-      </section>
+    <main className="main__container" ref={mainContainerRef}>
+      <Parallax/>
 
-      <div className="rectangle">Hi there</div>
-      <div className="photo-list__outer-container" ref={outerContainerRef}>
+      <section className="rectangle">Hi there</section>
+
+      <section className="photo-list__outer-container" ref={outerContainerRef}>
         <div className="photo-list__container" ref={containerRef}>
           <div className="photo-list__inner-container" ref={innerContainerRef}>
             {photos.map((item, index) => (
@@ -109,9 +91,9 @@ function PhotosList() {
             ))}
           </div>
         </div>
-      </div>
-      <div className="rectangle">Hi here</div>
-    </>
+      </section>
+      <section className="rectangle">Hi here</section>
+    </main>
   );
 }
 
