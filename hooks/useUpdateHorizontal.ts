@@ -11,6 +11,51 @@ export default function useUpdateHorizontal(
   innerContainerRef: HTMLElement | null,
   highlight: HighlightInterface | null
 ) {
+  //Select all needed elements
+  //Parallax
+  const parallaxItems = mainContainerRef?.querySelectorAll(
+    '[data-animation="translate"]'
+  );
+
+  //Video
+  const videoContainer = mainContainerRef?.querySelector(".video__container");
+  const videoMedia: HTMLDivElement | null | undefined =
+    mainContainerRef?.querySelector(".video__media");
+
+  //==============
+  //   Resize
+  //==============
+  function onResize() {
+    document.documentElement.style.setProperty(
+      "--100vh",
+      `${window.innerHeight}px`
+    );
+
+    const height = window.innerHeight;
+    const width2 = window.innerWidth;
+
+    // scrolling.onResize();
+
+    // translates.forEach((translate) => {
+    //   translate.onResize();
+    // });
+
+    if (videoMedia) videoMedia.style.transform = "";
+
+    //gets position of the video element
+    const videoContainerPos = videoContainer?.getBoundingClientRect();
+
+    // const width = this.elements.highlightWrapper.clientWidth + this.width;
+
+    //sets highlights height as it's width
+    // this.elements.highlight.style.height = `${width}px`;
+
+    // this.highlight = getBoundingClientRect(this.elements.highlight);
+  }
+
+  //==============
+  //    Update
+  //==============
   function update() {
     const scrollPos =
       mainContainerRef?.parentElement?.parentElement?.getBoundingClientRect()
@@ -21,11 +66,6 @@ export default function useUpdateHorizontal(
     if (!scrollPos) return;
 
     //Parallax animations
-
-    const parallaxItems = mainContainerRef?.querySelectorAll(
-      '[data-animation="translate"]'
-    );
-
     //animate all data-animation elements – make an array of it to be able to map
     if (!parallaxItems) return;
 
@@ -65,5 +105,6 @@ export default function useUpdateHorizontal(
     window.requestAnimationFrame(update);
   }
 
+  onResize();
   update();
 }

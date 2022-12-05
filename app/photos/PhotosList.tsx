@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Photo, HighlightInterface } from "../../typings";
 import useUpdateHorizontal from "./../../hooks/useUpdateHorizontal";
 import Parallax from "./Parallax";
+import Video from "./Video";
 
 function PhotosList() {
   const photos: Photo[] = [
@@ -78,6 +79,7 @@ function PhotosList() {
   return (
     <main className="main__container" ref={mainContainerRef}>
       <Parallax/>
+      <Video/>
 
       <section className="rectangle">Hi there</section>
 

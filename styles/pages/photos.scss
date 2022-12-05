@@ -65,6 +65,22 @@
   object-fit: cover;
 }
 
+// =========== Video ============
+
+.video__container {
+  border-radius: 0 0 1rem 1rem;
+  height: var(--100vh);
+  overflow: hidden;
+  position: relative;
+  width: 100vw;
+}
+
+.video__media {
+  @extend %cover;
+
+  object-fit: cover;
+}
+
 // =========== Horizontal scroll ============
 
 .photo-list__outer-container {
